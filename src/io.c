@@ -1,4 +1,5 @@
 #include "io.h"
+#include "assertions.h"
 #include <fcntl.h>
 #include <gc/gc.h>
 #include <stdarg.h>
@@ -16,6 +17,7 @@ void io_finalizer(IO *self, void *user_data) {
 
 IO *io_new(const char *path) {
   FILE *file = fopen(path, "rw");
+  VERIFY(file != NULL);
 
   setvbuf(file, NULL, _IONBF, 0);
 
