@@ -16,7 +16,7 @@ void io_finalizer(IO *self, void *user_data) {
 }
 
 IO *io_new(const char *path) {
-  FILE *file = fopen(path, "rw");
+  FILE *file = fopen(path, "r+");
   VERIFY(file != NULL);
 
   setvbuf(file, NULL, _IONBF, 0);
