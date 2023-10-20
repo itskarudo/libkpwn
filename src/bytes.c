@@ -26,7 +26,8 @@ Bytes *b_slice(const Bytes *original, size_t start, size_t end) {
 
   const uint8_t *start_ptr = b_s(original) + posmod(start, b_len(original));
 
-  size_t len = posmod(end, b_len(original)) - posmod(start, b_len(original));
+  size_t len =
+      posmod(end, b_len(original)) - posmod(start, b_len(original)) + 1;
 
   Bytes *self = b_new_v(start_ptr, len);
   return self;
