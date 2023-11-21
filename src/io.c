@@ -1,5 +1,6 @@
 #include "io.h"
 #include "assertions.h"
+#include "utils.h"
 #include <fcntl.h>
 #include <gc/gc.h>
 #include <stdarg.h>
@@ -37,21 +38,19 @@ Bytes *io_read(IO *self, size_t n) {
   return buffer;
 }
 
-Bytes *io_readuntil(IO *self, char delim) {
+Bytes *io_readuntil(IO *self, Bytes *delim) {
 
-  char *line = NULL;
-  size_t n;
+  Bytes *buffer = io_read(self, b_len(delim));
 
-  ssize_t len = getdelim(&line, &n, delim, self->_file);
-
-  Bytes *buffer = b_new_v((uint8_t *)line, len);
-
-  free(line);
+  while (b_cmp(b_slice(buffer, -b_len(delim), -1), delim) != 0) {
+    Bytes *tmp = io_read(self, 1);
+    buffer = flat(buffer, tmp, NULL);
+  }
 
   return buffer;
 }
 
-Bytes *io_readline(IO *self) { return io_readuntil(self, '\n'); }
+Bytes *io_readline(IO *self) { return io_readuntil(self, b("\n")); }
 
 void io_write(IO *self, Bytes *v) { fwrite(b_s(v), 1, b_len(v), self->_file); }
 

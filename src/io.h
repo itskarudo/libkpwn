@@ -9,7 +9,7 @@ typedef struct {
 IO *io_new(const char *path);
 
 Bytes *io_read(IO *, size_t n);
-Bytes *io_readuntil(IO *, char delim);
+Bytes *io_readuntil(IO *, Bytes *delim);
 Bytes *io_readline(IO *);
 
 void io_write(IO *, Bytes *);
