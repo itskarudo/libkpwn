@@ -5,7 +5,7 @@ typedef struct {
   int _fd;
 } IO;
 
-IO *io_new(const char *path);
+IO *io_new(const char *path, int flags);
 
 Bytes *io_read(IO *, size_t n);
 Bytes *io_readuntil(IO *, Bytes *delim);

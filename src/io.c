@@ -16,8 +16,8 @@ void io_finalizer(IO *self, void *user_data) {
   free(self);
 }
 
-IO *io_new(const char *path) {
-  int fd = open(path, O_RDWR);
+IO *io_new(const char *path, int flags) {
+  int fd = open(path, flags);
   VERIFY(fd != -1);
 
   IO *self = GC_MALLOC_ATOMIC(sizeof(IO));
