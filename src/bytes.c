@@ -32,3 +32,9 @@ Bytes *b_slice(const Bytes *original, size_t start, size_t end) {
   Bytes *self = b_new_v(start_ptr, len);
   return self;
 }
+
+int b_cmp(const Bytes *b1, const Bytes *b2) {
+  if (b_len(b1) != b_len(b2))
+    return 1;
+  return memcmp(b_s(b1), b_s(b2), b_len(b1));
+}
