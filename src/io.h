@@ -1,9 +1,8 @@
 #pragma once
 
 #include "bytes.h"
-#include <stdio.h>
 typedef struct {
-  FILE *_file;
+  int _fd;
 } IO;
 
 IO *io_new(const char *path);

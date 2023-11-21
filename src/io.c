@@ -11,21 +11,19 @@
 void io_finalizer(IO *self, void *user_data) {
   (void)user_data;
 
-  fclose(self->_file);
+  close(self->_fd);
 
   free(self);
 }
 
 IO *io_new(const char *path) {
-  FILE *file = fopen(path, "r+");
-  VERIFY(file != NULL);
-
-  setvbuf(file, NULL, _IONBF, 0);
+  int fd = open(path, O_RDWR);
+  VERIFY(fd != -1);
 
   IO *self = GC_MALLOC_ATOMIC(sizeof(IO));
   GC_register_finalizer(self, (GC_finalization_proc)io_finalizer, NULL, NULL,
                         NULL);
-  self->_file = file;
+  self->_fd = fd;
   return self;
 }
 
@@ -33,7 +31,7 @@ Bytes *io_read(IO *self, size_t n) {
 
   Bytes *buffer = b_new(n);
 
-  buffer->_len = fread(b_s(buffer), 1, n, self->_file);
+  buffer->_len = read(self->_fd, buffer->_data, n);
 
   return buffer;
 }
@@ -52,10 +50,10 @@ Bytes *io_readuntil(IO *self, Bytes *delim) {
 
 Bytes *io_readline(IO *self) { return io_readuntil(self, b("\n")); }
 
-void io_write(IO *self, Bytes *v) { fwrite(b_s(v), 1, b_len(v), self->_file); }
+void io_write(IO *self, Bytes *v) { write(self->_fd, v->_data, v->_len); }
 
 int io_ioctl(IO *self, unsigned long request, ...) {
   va_list args;
   va_start(args, request);
-  return ioctl(fileno(self->_file), request, va_arg(args, void *));
+  return ioctl(self->_fd, request, va_arg(args, void *));
 }
