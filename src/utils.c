@@ -23,12 +23,12 @@ Bytes *flat(const Bytes *first, ...) {
 
   va_start(args, first);
 
-  uint8_t *dest = b_s(buffer);
+  uint8_t *dest = b_d(buffer);
 
   tmp = first;
 
   while (tmp != NULL) {
-    memcpy(dest, b_s(tmp), b_len(tmp));
+    memcpy(dest, b_d(tmp), b_len(tmp));
     dest += b_len(tmp);
     tmp = va_arg(args, Bytes *);
   }
@@ -80,7 +80,7 @@ Bytes * xor
 
       Bytes *buffer = b_new(buf_len);
 
-      memset(b_s(buffer), 0, buf_len);
+      memset(b_d(buffer), 0, buf_len);
 
       va_start(args, first);
 
