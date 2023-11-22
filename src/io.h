@@ -1,6 +1,8 @@
 #pragma once
 
 #include "bytes.h"
+#include <fcntl.h>
+
 typedef struct {
   int _fd;
 } IO;
