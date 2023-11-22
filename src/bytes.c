@@ -40,12 +40,26 @@ int b_cmp(const Bytes *b1, const Bytes *b2) {
 }
 
 const char *b_s(const Bytes *self) {
-  char *s = GC_MALLOC_ATOMIC(b_len(self) * 4 + 1);
+  char *s = GC_MALLOC_ATOMIC(b_len(self) * 4 + 4);
 
   char *ptr = s;
+  *ptr++ = 'b';
+  *ptr++ = '\'';
 
   for (size_t i = 0; i < b_len(self); i++) {
-    if (b_at(self, i) >= 0x20 && b_at(self, i) <= 0x7e) {
+    if (b_at(self, i) == '\\') {
+      *ptr++ = '\\';
+      *ptr++ = '\\';
+    } else if (b_at(self, i) == '\t') {
+      *ptr++ = '\\';
+      *ptr++ = 't';
+    } else if (b_at(self, i) == '\n') {
+      *ptr++ = '\\';
+      *ptr++ = 'n';
+    } else if (b_at(self, i) == '\r') {
+      *ptr++ = '\\';
+      *ptr++ = 'r';
+    } else if (b_at(self, i) >= 0x20 && b_at(self, i) <= 0x7e) {
       *ptr++ = b_at(self, i);
     } else {
       sprintf(ptr, "\\x%02x", b_at(self, i));
@@ -53,6 +67,7 @@ const char *b_s(const Bytes *self) {
     }
   }
 
+  *ptr++ = '\'';
   *ptr = '\0';
 
   return s;
