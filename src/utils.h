@@ -15,7 +15,7 @@ Bytes *b_mul(const Bytes *, size_t n);
 Bytes * xor (const Bytes *, ...);
 uint64_t posmod(int64_t i, int64_t n);
 
-#define ESCALATE_PRIVS_AND_RET(func, state, pkc, cc, ret)                      \
+#define DEFINE_RET2USR(func, state, pkc, cc, ret)                              \
   void func(void) {                                                            \
     void *(*prepare_kernel_cred)(void *) = (void *(*)(void *))pkc;             \
     void (*commit_creds)(void *) = (void (*)(void *))cc;                       \
