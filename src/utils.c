@@ -1,5 +1,4 @@
 #include "utils.h"
-#include "kpwn.h"
 #include <gc/gc.h>
 #include <stdarg.h>
 #include <string.h>
@@ -62,42 +61,39 @@ SavedState save_state(void) {
   return state;
 }
 
-Bytes * xor
-    (const Bytes *first, ...) {
-      va_list args;
-      va_start(args, first);
+Bytes *b_xor(const Bytes *first, ...) {
+  va_list args;
+  va_start(args, first);
 
-      const Bytes *tmp = first;
-      size_t buf_len = b_len(first);
+  const Bytes *tmp = first;
+  size_t buf_len = b_len(first);
 
-      while (tmp != NULL) {
-        if (b_len(tmp) > buf_len)
-          buf_len = b_len(tmp);
-        tmp = va_arg(args, const Bytes *);
-      }
+  while (tmp != NULL) {
+    if (b_len(tmp) > buf_len)
+      buf_len = b_len(tmp);
+    tmp = va_arg(args, const Bytes *);
+  }
 
-      va_end(args);
+  va_end(args);
 
-      Bytes *buffer = b_new(buf_len);
+  Bytes *buffer = b_new(buf_len);
 
-      memset(b_d(buffer), 0, buf_len);
+  memset(b_d(buffer), 0, buf_len);
 
-      va_start(args, first);
+  va_start(args, first);
 
-      tmp = first;
+  tmp = first;
 
-      while (tmp != NULL) {
-        for (size_t i = 0; i < buf_len; i++)
-          b_at(buffer, i) ^= b_at(tmp, i % b_len(tmp));
+  while (tmp != NULL) {
+    for (size_t i = 0; i < buf_len; i++)
+      b_at(buffer, i) ^= b_at(tmp, i % b_len(tmp));
 
-        tmp = va_arg(args, Bytes *);
-      }
+    tmp = va_arg(args, Bytes *);
+  }
 
-      va_end(args);
+  va_end(args);
 
-      return buffer;
-    }
-
-    uint64_t posmod(int64_t i, int64_t n) {
-  return (i % n + n) % n;
+  return buffer;
 }
+
+uint64_t posmod(int64_t i, int64_t n) { return (i % n + n) % n; }

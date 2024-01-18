@@ -12,7 +12,7 @@ SavedState save_state(void);
 
 Bytes *flat(const Bytes *, ...);
 Bytes *b_mul(const Bytes *, size_t n);
-Bytes * xor (const Bytes *, ...);
+Bytes *b_xor(const Bytes *, ...);
 uint64_t posmod(int64_t i, int64_t n);
 
 #define DEFINE_RET2USR(func, state, pkc, cc, ret)                              \
