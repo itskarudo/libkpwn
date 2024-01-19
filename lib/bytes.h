@@ -7,11 +7,19 @@ typedef struct {
   uint8_t _data[];
 } Bytes;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 Bytes *b_new(size_t n);
 Bytes *b_new_v(const uint8_t *, size_t n);
 Bytes *b_slice(const Bytes *, size_t start, size_t end);
 int b_cmp(const Bytes *, const Bytes *);
 const char *b_s(const Bytes *);
+
+#ifdef __cplusplus
+}
+#endif
 
 #define b(v) (b_new_v((uint8_t *)v, sizeof(v) - 1))
 #define b_d(v) (v->_data)

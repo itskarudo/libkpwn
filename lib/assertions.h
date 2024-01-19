@@ -2,7 +2,15 @@
 
 #include <stdbool.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 __attribute__((noreturn)) void __kpwn_assert_failed(const char *msg);
+
+#ifdef __cplusplus
+}
+#endif
 
 #define __stringify_helper(x) #x
 #define __stringify(x) __stringify_helper(x)

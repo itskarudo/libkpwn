@@ -1,11 +1,12 @@
+#include "kelf.h"
 #include "assertions.h"
-#include "kpwn.h"
 #include <elf.h>
 #include <fcntl.h>
 #include <gc/gc.h>
 #include <string.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <utarray.h>
 #include <uthash.h>
 
 #undef uthash_malloc
@@ -13,6 +14,15 @@
 
 #define uthash_malloc(sz) GC_MALLOC_ATOMIC(sz)
 #define uthash_free(ptr, sz) GC_FREE(ptr)
+
+struct _ELF {
+  uint64_t address;
+  uint8_t *data;
+  struct KeyLongMap *syms;
+  struct KeyLongMap *got;
+  UT_array *sections;
+  bool statically_linked;
+};
 
 struct KeyLongMap {
   const char *name;

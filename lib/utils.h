@@ -8,12 +8,20 @@ typedef struct {
   uint64_t flags;
 } SavedState;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 SavedState save_state(void);
 
 Bytes *flat(const Bytes *, ...);
 Bytes *b_mul(const Bytes *, size_t n);
 Bytes *b_xor(const Bytes *, ...);
 uint64_t posmod(int64_t i, int64_t n);
+
+#ifdef __cplusplus
+}
+#endif
 
 #define DEFINE_RET2USR(func, state, pkc, cc, ret)                              \
   void func(void) {                                                            \

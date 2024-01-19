@@ -1,3 +1,6 @@
-[submodule "deps/bdwgc"]
-	path = deps/bdwgc
+[submodule "cli/deps/argparse"]
+	path = cli/deps/argparse
+	url = https://github.com/p-ranav/argparse
+[submodule "lib/deps/bdwgc"]
+	path = lib/deps/bdwgc
 	url = https://github.com/ivmai/bdwgc
