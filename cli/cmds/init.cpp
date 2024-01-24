@@ -15,7 +15,7 @@ cmake_minimum_required(VERSION 3.12)
 project(Exploit)
 
 add_executable(exploit src/main.c)
-target_link_libraries(exploit PRIVATE kpwn -static)
+target_link_libraries(exploit PRIVATE kpwn gc -static)
 
 add_custom_target(compress
     COMMAND "${CMAKE_COMMAND}" -E env "EXPLOIT_DIR=${Exploit_SOURCE_DIR}" "${Exploit_SOURCE_DIR}/chal/compress.sh"
