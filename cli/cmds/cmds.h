@@ -1,8 +1,8 @@
 #pragma once
-#include <string>
+#include <argparse/argparse.hpp>
 
 namespace cmds {
 
-void init(std::string const &dir);
+void init(argparse::ArgumentParser const& cmd_options);
 
 }

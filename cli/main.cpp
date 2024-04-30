@@ -30,5 +30,5 @@ int main(int argc, char *argv[]) {
   }
 
   if (program.is_subcommand_used("init"))
-    cmds::init(init_command.get<std::string>("directory"));
+    cmds::init(init_command);
 }

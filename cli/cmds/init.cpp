@@ -1,6 +1,7 @@
 #include "cmds.h"
 #include <filesystem>
 #include <fstream>
+#include <format>
 #include <kpwn.h>
 
 constexpr const char *main_template = R"(#include <kpwn/kpwn.h>
@@ -17,46 +18,32 @@ project(Exploit)
 add_executable(exploit src/main.c)
 target_link_libraries(exploit PRIVATE kpwn gc -static)
 
-add_custom_target(compress
-    COMMAND "${CMAKE_COMMAND}" -E env "EXPLOIT_DIR=${Exploit_SOURCE_DIR}" "${Exploit_SOURCE_DIR}/chal/compress.sh"
-    USES_TERMINAL
-)
-add_dependencies(compress exploit)
-
-add_custom_target(run
-    COMMAND "${CMAKE_COMMAND}" -E env "EXPLOIT_DIR=${Exploit_SOURCE_DIR}" "${Exploit_SOURCE_DIR}/chal/run.sh"
-    USES_TERMINAL
-)
-add_dependencies(run compress)
-
-add_custom_target(debug
-    COMMAND "${CMAKE_COMMAND}" -E env "EXPLOIT_DIR=${Exploit_SOURCE_DIR}" "${Exploit_SOURCE_DIR}/chal/debug.sh"
-    USES_TERMINAL
-)
-add_dependencies(debug compress)
 )";
 
 constexpr const char *compress_template = R"(#!/bin/bash
 
-if [ ! -d "${EXPLOIT_DIR}/chal/initramfs" ]; then
-  printf "chal/initramfs/ directory does not exist.\n"
+if [ ! -d "./initramfs" ]; then
+  echo "./initramfs/ directory does not exist."
   exit 1
 fi
 
-cp "${EXPLOIT_DIR}/build/exploit" "${EXPLOIT_DIR}/chal/initramfs"
-cd "${EXPLOIT_DIR}/chal/initramfs"
+cp "../build/exploit" "./initramfs/"
+cd ./initramfs
 
 find . -print0 \
 | cpio --null -ov --format=newc \
 | gzip -9 > initramfs.cpio.gz
+
 mv ./initramfs.cpio.gz ../
 
 )";
 
 namespace cmds {
-void init(std::string const &dir) {
+void init(argparse::ArgumentParser const& cmd_options) {
 
   log_info("Initializing the project..\n\n");
+
+  auto dir = cmd_options.get<std::string>("directory");
 
   auto path =
       std::filesystem::weakly_canonical(std::filesystem::current_path() / dir);
@@ -90,6 +77,10 @@ void init(std::string const &dir) {
                                  std::filesystem::perm_options::add);
 
     log_info("Created chal/compress.sh template\n");
+
+    // TODO: support custom CMake options and different build systems
+    std::system(std::format("cmake -S {} -B {}/build", path.string(), path.string()).c_str());
+    std::system(std::format("make -C {}/build", path.string()).c_str());
 
     std::putchar('\n');
     log_success("Initialized the project, happy hacking!\n\n");
