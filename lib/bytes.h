@@ -27,25 +27,25 @@ const char *b_s(const Bytes *);
 #define b_len(v) (v->_len)
 
 #define p8(v)                                                                  \
-  ({                                                                           \
+  __extension__({                                                              \
     uint8_t _tmp = v;                                                          \
     b_new_v(&_tmp, 1);                                                         \
   })
 
 #define p16(v)                                                                 \
-  ({                                                                           \
+  __extension__({                                                              \
     uint16_t _tmp = v;                                                         \
     b_new_v((uint8_t *)&_tmp, 2);                                              \
   })
 
 #define p32(v)                                                                 \
-  ({                                                                           \
+  __extension__({                                                              \
     uint32_t _tmp = v;                                                         \
     b_new_v((uint8_t *)&_tmp, 4);                                              \
   })
 
 #define p64(v)                                                                 \
-  ({                                                                           \
+  __extension__({                                                              \
     uint64_t _tmp = v;                                                         \
     b_new_v((uint8_t *)&_tmp, 8);                                              \
   })
