@@ -12,6 +12,7 @@ extern "C" {
 #endif
 
 IO *io_new(const char *path, int flags);
+void io_close(IO *);
 
 Bytes *io_read(IO *, size_t n);
 Bytes *io_readuntil(IO *, Bytes *delim);

@@ -27,6 +27,8 @@ IO *io_new(const char *path, int flags) {
   return self;
 }
 
+void io_close(IO *self) { close(self->_fd); }
+
 Bytes *io_read(IO *self, size_t n) {
 
   Bytes *buffer = b_new(n);
