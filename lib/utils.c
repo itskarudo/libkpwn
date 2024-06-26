@@ -97,3 +97,10 @@ Bytes *b_xor(const Bytes *first, ...) {
 }
 
 uint64_t posmod(int64_t i, int64_t n) { return (i % n + n) % n; }
+
+Bytes *iretq_frame(SavedState state, uint64_t rip) {
+  Bytes *frame = flat(p64(rip), p64(state.cs), p64(state.flags), p64(state.sp),
+                      p64(state.ss), NULL);
+
+  return frame;
+}

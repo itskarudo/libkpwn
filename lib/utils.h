@@ -18,6 +18,7 @@ Bytes *flat(const Bytes *, ...);
 Bytes *b_mul(const Bytes *, size_t n);
 Bytes *b_xor(const Bytes *, ...);
 uint64_t posmod(int64_t i, int64_t n);
+Bytes *iretq_frame(SavedState, uint64_t rip);
 
 #ifdef __cplusplus
 }
