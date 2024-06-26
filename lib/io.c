@@ -17,13 +17,13 @@ void io_finalizer(IO *self, void *user_data) {
 }
 
 IO *io_new(const char *path, int flags) {
-  int fd = open(path, flags);
-  VERIFY(fd != -1);
-
   IO *self = GC_MALLOC_ATOMIC(sizeof(IO));
   GC_register_finalizer(self, (GC_finalization_proc)io_finalizer, NULL, NULL,
                         NULL);
-  self->_fd = fd;
+
+  self->_fd = open(path, flags);
+  VERIFY(self->_fd != -1);
+
   return self;
 }
 
