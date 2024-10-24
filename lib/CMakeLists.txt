@@ -37,7 +37,7 @@ set_target_properties(libkpwn PROPERTIES
 target_include_directories(libkpwn PUBLIC . deps)
 target_link_libraries(libkpwn PUBLIC gc)
 
-target_compile_options(libkpwn PRIVATE -Wall -Wextra -Wpedantic -Werror)
+target_compile_options(libkpwn PRIVATE -Wall -Wextra)
 
 install(TARGETS libkpwn EXPORT libkpwn-targets
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
