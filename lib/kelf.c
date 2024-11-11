@@ -1,5 +1,4 @@
 #include "kelf.h"
-#include "assertions.h"
 #include <elf.h>
 #include <fcntl.h>
 #include <gc/gc.h>
@@ -198,15 +197,25 @@ void elf_finalizer(ELF *self, void *user_data) {
 ELF *elf_new(const char *filename) {
 
   ELF *self = GC_MALLOC_ATOMIC(sizeof(ELF));
+  if (self == NULL)
+    return NULL;
+
   self->syms = NULL;
 
   int fd = open(filename, O_RDONLY);
-  VERIFY(fd > 0);
+  if (fd < 0)
+    return NULL;
 
   struct stat st;
   stat(filename, &st);
 
   uint8_t *data = GC_MALLOC_ATOMIC(st.st_size);
+
+  if (data == NULL) {
+    close(fd);
+    return NULL;
+  }
+
   read(fd, data, st.st_size);
   close(fd);
 
@@ -215,8 +224,6 @@ ELF *elf_new(const char *filename) {
   Elf64_Ehdr *hdr = (Elf64_Ehdr *)data;
 
   uint8_t binary_class = hdr->e_ident[EI_CLASS];
-
-  VERIFY(binary_class == ELFCLASS32 || binary_class == ELFCLASS64);
 
   utarray_new(self->sections, &section_icd);
 

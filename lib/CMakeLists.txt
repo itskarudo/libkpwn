@@ -2,7 +2,6 @@
 set(HAVE_GETCONTEXT FALSE)
 
 set(lib_sources
-  assertions.c
   bytes.c
   encoding.c
   io.c
@@ -13,7 +12,6 @@ set(lib_sources
 )
 
 set(lib_headers
-  assertions.h
   bytes.h
   encoding.h
   io.h

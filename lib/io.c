@@ -1,5 +1,4 @@
 #include "io.h"
-#include "assertions.h"
 #include "utils.h"
 #include <fcntl.h>
 #include <gc/gc.h>
@@ -18,11 +17,15 @@ void io_finalizer(IO *self, void *user_data) {
 
 IO *io_new(const char *path, int flags) {
   IO *self = GC_MALLOC_ATOMIC(sizeof(IO));
-  GC_register_finalizer(self, (GC_finalization_proc)io_finalizer, NULL, NULL,
-                        NULL);
+  if (self == NULL)
+    return NULL;
 
   self->_fd = open(path, flags);
-  VERIFY(self->_fd != -1);
+  if (self->_fd == -1)
+    return NULL;
+
+  GC_register_finalizer(self, (GC_finalization_proc)io_finalizer, NULL, NULL,
+                        NULL);
 
   return self;
 }
@@ -32,6 +35,8 @@ void io_close(IO *self) { close(self->_fd); }
 Bytes *io_read(IO *self, size_t n) {
 
   Bytes *buffer = b_new(n);
+  if (buffer == NULL)
+    return NULL;
 
   buffer->_len = read(self->_fd, buffer->_data, n);
 

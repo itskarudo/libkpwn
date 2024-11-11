@@ -1,5 +1,5 @@
-#include "assertions.h"
-#include "kpwn.h"
+#include "bytes.h"
+#include "utils.h"
 #include <gc/gc.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -8,7 +8,8 @@
 Bytes *b_new(size_t n) {
   Bytes *self = GC_MALLOC_ATOMIC(sizeof(Bytes) + n);
 
-  VERIFY(self != NULL);
+  if (self == NULL)
+    return NULL;
 
   self->_len = n;
   return self;

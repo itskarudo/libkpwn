@@ -19,6 +19,8 @@ Bytes *flat(const Bytes *first, ...) {
   va_end(args);
 
   Bytes *buffer = b_new(total_len);
+  if (buffer == NULL)
+    return NULL;
 
   va_start(args, first);
 
@@ -39,6 +41,8 @@ Bytes *flat(const Bytes *first, ...) {
 
 Bytes *b_mul(const Bytes *bytes, size_t n) {
   Bytes *buf = b_new(b_len(bytes) * n);
+  if (buf == NULL)
+    return NULL;
 
   for (size_t i = 0; i < b_len(buf); i++) {
     b_at(buf, i) = b_at(bytes, i % b_len(bytes));
@@ -77,6 +81,8 @@ Bytes *b_xor(const Bytes *first, ...) {
   va_end(args);
 
   Bytes *buffer = b_new(buf_len);
+  if (buffer == NULL)
+    return NULL;
 
   memset(b_d(buffer), 0, buf_len);
 
